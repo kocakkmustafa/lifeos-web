@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#080C16" />
+
+    <title>LifeOS — Yaşamını yeniden tasarla</title>
+    <meta
+      name="description"
+      content="Offline-first kişisel yaşam işletim sistemi. Sağlık, finans, eğitim ve hedeflerini tek yerde tut. Verin cihazında kalır, uçtan uca şifrelidir."
+    />
+    <link rel="canonical" href="https://lifeos.app/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://lifeos.app/" />
+    <meta property="og:title" content="LifeOS — Yaşamını yeniden tasarla" />
+    <meta
+      property="og:description"
+      content="Offline-first kişisel yaşam işletim sistemi. Verin cihazında kalır."
+    />
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="LifeOS — Yaşamını yeniden tasarla" />
+    <meta
+      name="twitter:description"
+      content="Offline-first kişisel yaşam işletim sistemi."
+    />
+
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <style>
+      :root {
+        --bg: #080c16;
+        --surface: #0f1320;
+        --border: rgba(255, 255, 255, 0.08);
+        --border-strong: rgba(255, 255, 255, 0.18);
+        --ink-50: #f8fafc;
+        --ink-100: #e2e8f0;
+        --ink-200: #cbd5e1;
+        --ink-300: #94a3b8;
+        --ink-400: #64748b;
+        --accent: #6ee7b7;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+        color: var(--ink-100);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter",
+          "Helvetica Neue", Arial, sans-serif;
+        font-feature-settings: "ss01", "cv11";
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        line-height: 1.6;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* Header */
+      header.site {
+        padding: 28px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      header.site .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 17px;
+        color: var(--ink-50);
+      }
+      .logo .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 14px rgba(110, 231, 183, 0.7);
+      }
+      nav.site-nav {
+        display: flex;
+        gap: 20px;
+        font-size: 14px;
+        color: var(--ink-300);
+      }
+      nav.site-nav a:hover {
+        color: var(--ink-50);
+      }
+
+      /* Hero */
+      section.hero {
+        padding: 96px 0 56px;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.03);
+        padding: 6px 12px 6px 8px;
+        border-radius: 999px;
+        font-family: ui-monospace, "JetBrains Mono", "Menlo", monospace;
+        font-size: 11.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-200);
+      }
+      .eyebrow .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 8px rgba(110, 231, 183, 0.7);
+      }
+
+      h1 {
+        margin: 24px 0 18px;
+        font-size: clamp(40px, 7vw, 72px);
+        line-height: 0.96;
+        letter-spacing: -0.03em;
+        font-weight: 800;
+        color: var(--ink-50);
+        max-width: 14ch;
+      }
+      .lead {
+        font-size: 17px;
+        line-height: 1.65;
+        color: var(--ink-300);
+        max-width: 56ch;
+      }
+
+      /* Store buttons */
+      .stores {
+        margin-top: 32px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .store {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid var(--border-strong);
+        background: rgba(255, 255, 255, 0.02);
+        padding: 12px 18px;
+        border-radius: 14px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ink-100);
+        transition: 0.15s border-color ease, 0.15s background ease;
+      }
+      .store:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .store small {
+        font-size: 11px;
+        color: var(--ink-400);
+        font-family: ui-monospace, monospace;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .badge-soon {
+        font-size: 10px;
+        color: var(--accent);
+        border: 1px solid rgba(110, 231, 183, 0.4);
+        padding: 2px 8px;
+        border-radius: 999px;
+        margin-left: 4px;
+      }
+
+      /* Features */
+      section.features {
+        padding: 80px 0;
+        border-top: 1px solid var(--border);
+      }
+      section.features .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 24px;
+      }
+      .feature {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 24px;
+        background: rgba(255, 255, 255, 0.015);
+      }
+      .feature h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--ink-50);
+      }
+      .feature p {
+        margin: 0;
+        font-size: 14.5px;
+        color: var(--ink-300);
+        line-height: 1.55;
+      }
+
+      /* Privacy strip */
+      section.privacy-strip {
+        padding: 64px 0;
+        border-top: 1px solid var(--border);
+        background: rgba(110, 231, 183, 0.02);
+      }
+      section.privacy-strip h2 {
+        margin: 0 0 12px;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--ink-50);
+        letter-spacing: -0.01em;
+      }
+      section.privacy-strip p {
+        margin: 0 0 18px;
+        font-size: 15.5px;
+        color: var(--ink-200);
+        max-width: 60ch;
+      }
+      section.privacy-strip ul {
+        list-style: none;
+        margin: 12px 0 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        font-size: 14px;
+        color: var(--ink-200);
+        font-family: ui-monospace, monospace;
+        letter-spacing: 0.08em;
+      }
+      section.privacy-strip ul li:before {
+        content: "→ ";
+        color: var(--accent);
+      }
+
+      /* Footer */
+      footer.site {
+        padding: 48px 0 56px;
+        border-top: 1px solid var(--border);
+        color: var(--ink-400);
+        font-size: 13.5px;
+      }
+      footer.site .container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 28px;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+      footer.site ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+      }
+      footer.site a:hover {
+        color: var(--ink-50);
+      }
+      footer.site .meta {
+        font-family: ui-monospace, monospace;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 11px;
+        color: var(--ink-400);
+      }
+
+      /* Reduced motion preference */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site">
+      <div class="container">
+        <div class="logo">
+          <span class="dot"></span>
+          <span>LifeOS</span>
+        </div>
+        <nav class="site-nav" aria-label="Site navigation">
+          <a href="https://yulalab.com/projects/lifeos">Detay</a>
+          <a href="https://yulalab.com/privacy/lifeos">Gizlilik</a>
+          <a href="https://yulalab.com/support">Destek</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <span class="eyebrow">
+            <span class="dot"></span> LifeOS · iOS &amp; Android
+          </span>
+          <h1>Yaşamını yeniden tasarla.</h1>
+          <p class="lead">
+            Sağlık, finans, eğitim ve hedeflerini tek yerde tut. Offline çalışır,
+            verin cihazında AES-256 ile şifrelenir, bulut senkronu uçtan uca
+            şifrelidir — YULA Lab okuyamaz, eğitim için kullanamaz.
+          </p>
+
+          <div class="stores">
+            <a class="store" href="https://yulalab.com/projects/lifeos" rel="noopener">
+              <span>App Store</span>
+              <span class="badge-soon">Yakında</span>
+            </a>
+            <a class="store" href="https://yulalab.com/projects/lifeos" rel="noopener">
+              <span>Google Play</span>
+              <span class="badge-soon">Yakında</span>
+            </a>
+            <a class="store" href="https://yulalab.com/projects/lifeos" rel="noopener">
+              <span>Detaylar</span>
+              <small>yulalab.com</small>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="container">
+          <div class="grid">
+            <div class="feature">
+              <h3>Offline-first</h3>
+              <p>
+                İnternet olmadan tam çalışır. Veriniz cihazınızda SQLCipher + AES-256
+                ile şifreli tutulur.
+              </p>
+            </div>
+            <div class="feature">
+              <h3>Apple Health entegrasyonu</h3>
+              <p>
+                Adım, kalp atışı, uyku ve egzersiz verilerini Apple Health veya
+                Health Connect üzerinden cihaz içinde okur.
+              </p>
+            </div>
+            <div class="feature">
+              <h3>Sesli günlük ve Z-Rapor</h3>
+              <p>
+                Konuşmanız cihazda metne dönüştürülür; isterseniz Gemini analizini
+                opt-in olarak açarsınız.
+              </p>
+            </div>
+            <div class="feature">
+              <h3>Şeffaf şifreleme</h3>
+              <p>
+                Bulut yedeği uçtan uca şifrelidir; anahtar yalnızca sizdedir. Sunucu
+                hiçbir veriyi açık metin görmez.
+              </p>
+            </div>
+            <div class="feature">
+              <h3>Reklamsız, izleme yok</h3>
+              <p>
+                Tek gelir modelimiz ödeme yapan kullanıcı. Veri toplayıp satmıyoruz;
+                analitik bile minimumda ve onay-gated.
+              </p>
+            </div>
+            <div class="feature">
+              <h3>Tek tıkla çıkış</h3>
+              <p>
+                İptal tek tık. Veri export tek tık. Hesap silme tek tık. KVKK ve GDPR
+                gerekenin ötesinde, self-servis.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="privacy-strip" aria-labelledby="privacy-heading">
+        <div class="container">
+          <h2 id="privacy-heading">Cihazınızda kalır. Sunucumuza gönderilmez.</h2>
+          <p>
+            LifeOS, AES-256 ile cihaz üstü şifreleme kullanan offline-first bir
+            uygulamadır. Sağlık, finans ve günlük verileriniz uçtan uca şifrelidir.
+          </p>
+          <ul>
+            <li>AES-256 · SQLCipher</li>
+            <li>Offline-first</li>
+            <li>0 reklam</li>
+            <li>KVKK + GDPR uyumlu</li>
+          </ul>
+          <p style="margin-top: 20px">
+            <a
+              href="https://yulalab.com/privacy/lifeos"
+              style="color: var(--ink-50); border-bottom: 1px solid var(--border-strong)"
+              >Tam gizlilik politikasını oku →</a
+            >
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site">
+      <div class="container">
+        <div>
+          <div class="logo" style="font-size: 15px">
+            <span class="dot"></span>
+            <span>LifeOS</span>
+          </div>
+          <div class="meta" style="margin-top: 14px">
+            YULA Lab · İstanbul · 2025
+          </div>
+        </div>
+        <ul aria-label="Footer links">
+          <li><a href="https://yulalab.com/projects/lifeos">Detay</a></li>
+          <li><a href="https://yulalab.com/privacy/lifeos">Gizlilik</a></li>
+          <li><a href="https://yulalab.com/support">Destek</a></li>
+          <li><a href="https://yulalab.com">yulalab.com</a></li>
+          <li>
+            <a href="mailto:merhaba@yulalab.com">merhaba@yulalab.com</a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>

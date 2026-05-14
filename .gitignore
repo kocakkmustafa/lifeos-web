@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+.firebaserc.local
+
+# Editor
+.vscode/
+.idea/
+
+# Dependencies (no build step, but just in case)
+node_modules/
+
+# Env
+.env
+.env.local
