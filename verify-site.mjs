@@ -70,6 +70,11 @@ check("sync copy limits the promise to supported data types", /desteklenen veri 
 
 check("Firebase serves the repository root", firebase.hosting?.public === ".");
 check("Firebase clean URLs remain enabled", firebase.hosting?.cleanUrls === true);
+check(
+  "Firebase excludes the local verifier from deploy artifacts",
+  Array.isArray(firebase.hosting?.ignore) &&
+    firebase.hosting.ignore.includes("verify-site.mjs"),
+);
 
 for (const result of results) {
   console.log(`${result.ok ? "✅" : "❌"} ${result.label}`);
