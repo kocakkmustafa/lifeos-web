@@ -8,9 +8,11 @@
     <title>LifeOS — Yaşamını yeniden tasarla</title>
     <meta
       name="description"
-      content="Offline-first kişisel yaşam işletim sistemi. Sağlık, finans, eğitim ve hedef kayıtların varsayılan olarak cihazında şifreli tutulur."
+      content="Offline-first kişisel yaşam işletim sistemi. Sağlık, finans, eğitim ve hedef kayıtları varsayılan olarak yerel çalışır."
     />
     <link rel="canonical" href="https://lifeos.app/" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" type="image/png" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -18,7 +20,7 @@
     <meta property="og:title" content="LifeOS — Yaşamını yeniden tasarla" />
     <meta
       property="og:description"
-      content="Offline-first kişisel yaşam işletim sistemi. Verin cihazında kalır."
+      content="Offline-first kişisel yaşam işletim sistemi. Bulut senkronu isteğe bağlıdır."
     />
     <meta property="og:locale" content="tr_TR" />
     <meta property="og:locale:alternate" content="en_US" />
@@ -322,7 +324,7 @@
           <h1>Yaşamını yeniden tasarla.</h1>
           <p class="lead">
             Sağlık, finans, eğitim ve hedeflerini tek yerde tut. Temel kayıtların
-            cihazında şifreli saklanır. Hesap oluşturmak ve bulut senkronu isteğe
+            varsayılan olarak yerel çalışır. Hesap oluşturmak ve bulut senkronu isteğe
             bağlıdır; senkron yalnız desteklenen veri türlerini kapsar ve
             kullanılabilirliği sürüme göre değişebilir.
           </p>
@@ -355,22 +357,23 @@
             <div class="feature">
               <h3>Offline-first</h3>
               <p>
-                Çekirdek kayıt akışları internet olmadan çalışır. Yerel veriler
-                cihazda SQLCipher ve platform güvenli depolamasıyla korunur.
+                Çekirdek kayıt akışları internet olmadan çalışır. Yerel kayıtlar
+                uygulamanın depolama katmanı ve platform güvenlik kontrolleriyle yönetilir.
               </p>
             </div>
             <div class="feature">
               <h3>Apple Health entegrasyonu</h3>
               <p>
                 Adım, kalp atışı, uyku ve egzersiz verilerini Apple Health veya
-                Health Connect üzerinden cihaz içinde okur.
+                Health Connect izin akışları üzerinden okur.
               </p>
             </div>
             <div class="feature">
               <h3>Sesli günlük ve Z-Rapor</h3>
               <p>
-                Konuşmanız cihazda metne dönüştürülür. Desteklenen cihazlarda
-                yerel Gemma modeli kullanılabilir; bulut AI bu sürümde kapalıdır.
+                Konuşmanız işletim sisteminin konuşma tanıma servisiyle metne
+                dönüştürülür. Desteklenen cihazlarda yapılandırılmış yerel Gemma
+                modeli kullanılabilir.
               </p>
             </div>
             <div class="feature">
@@ -382,10 +385,11 @@
               </p>
             </div>
             <div class="feature">
-              <h3>Reklamsız, izleme yok</h3>
+              <h3>Şeffaf veri beyanları</h3>
               <p>
-                Reklam veya davranışsal takip yoktur. Anonim crash raporları
-                varsayılan olarak kapalıdır ve yalnız kullanıcı onayıyla açılır.
+                Analiz, crash raporu ve mağaza veri güvenliği beyanları dış
+                read-back kanıtıyla ayrıca doğrulanır; bu yerel sayfa onların
+                yerine geçmez.
               </p>
             </div>
             <div class="feature">
@@ -403,14 +407,14 @@
         <div class="container">
           <h2 id="privacy-heading">Önce cihaz. Bulut yalnız sen seçersen.</h2>
           <p>
-            LifeOS offline-first çalışır ve yerel kayıtları cihazda şifreli tutar.
+            LifeOS offline-first çalışır ve yerel kayıtları varsayılan olarak yerel tutar.
             Hesap ve bulut senkronu isteğe bağlıdır; yalnız desteklenen kayıtlar
             senkron kapsamına girer. Güncel kapsamı gizlilik politikasında açıklarız.
           </p>
           <ul>
-            <li>AES-256 · SQLCipher</li>
+            <li>Offline-first yerel kayıt</li>
             <li>Offline-first</li>
-            <li>0 reklam</li>
+            <li>İsteğe bağlı bulut senkronu</li>
             <li>Açık gizlilik kontrolleri</li>
           </ul>
           <p style="margin-top: 20px">
