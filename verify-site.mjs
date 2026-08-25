@@ -33,6 +33,64 @@ function attribute(tag, name) {
   return match?.[2] ?? "";
 }
 
+const supportUrl = "https://lifeos.app/destek";
+const supportPath = "/destek";
+const slashfulSupportUrl = `${supportUrl}/`;
+const slashfulSupportPath = `${supportPath}/`;
+const staleSupportUrl = ["https://yulalab.com", "support"].join("/");
+
+function supportContractFailures({ home, support, sitemap, readme, firebase }) {
+  const failures = [];
+
+  if (firebase.hosting?.trailingSlash !== false) {
+    failures.push("firebase: trailingSlash must be false");
+  }
+
+  const canonicalTags = [...support.matchAll(/<link\b[^>]*>/gi)].filter((tag) =>
+    attribute(tag[0], "rel").toLowerCase().split(/\s+/).includes("canonical"),
+  );
+  if (
+    canonicalTags.length !== 1 ||
+    attribute(canonicalTags[0][0], "href") !== supportUrl
+  ) {
+    failures.push("support: canonical must be the exact slashless URL");
+  }
+
+  const supportHrefs = [...home.matchAll(/<a\b[^>]*>/gi)]
+    .map((match) => attribute(match[0], "href"))
+    .filter((href) => href.replace(/\/+$/, "") === supportPath);
+  if (supportHrefs.length === 0 || supportHrefs.some((href) => href !== supportPath)) {
+    failures.push("home: support hrefs must use the exact slashless path");
+  }
+
+  const supportLocations = [...sitemap.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/gi)]
+    .map((match) => match[1])
+    .filter((location) => location.replace(/\/+$/, "") === supportUrl);
+  if (
+    supportLocations.length !== 1 ||
+    supportLocations[0] !== supportUrl
+  ) {
+    failures.push("sitemap: support loc must be the exact slashless URL");
+  }
+
+  const documentedSupportUrls = [
+    ...readme.matchAll(/https:\/\/[^\s)<>'"]+/gi),
+  ]
+    .map((match) => match[0])
+    .filter(
+      (url) =>
+        url.replace(/\/+$/, "") === supportUrl || url === staleSupportUrl,
+    );
+  if (
+    documentedSupportUrls.length !== 2 ||
+    documentedSupportUrls.some((url) => url !== supportUrl)
+  ) {
+    failures.push("readme: both support URLs must use the exact LifeOS URL");
+  }
+
+  return failures;
+}
+
 async function iconContractFailures(html, readAsset) {
   const tags = [...html.matchAll(/<link\b[^>]*>/gi)].map((match) => match[0]);
   const failures = [];
@@ -75,11 +133,12 @@ async function iconContractFailures(html, readAsset) {
   return failures;
 }
 
-const [home, notFound, firebaseSource, sitemap] = await Promise.all([
+const [home, notFound, firebaseSource, sitemap, readme] = await Promise.all([
   read("./index.html"),
   read("./404.html"),
   read("./firebase.json"),
   read("./sitemap.xml"),
+  read("./README.md"),
 ]);
 const support = await read("./destek/index.html").catch(() => "");
 const firebase = JSON.parse(firebaseSource);
@@ -98,7 +157,65 @@ const appStoreAnchor = [...home.matchAll(/<a\b[^>]*>[\s\S]*?<\/a>/gi)]
 check("App Store CTA uses the live LifeOS listing", home.includes(`href="${appStoreHref}"`));
 check("App Store CTA is not marked Yakında", appStoreAnchor.length > 0 && !/Yakında/i.test(appStoreAnchor));
 
-check("root links to the local support route", /href="\/destek\/?"/.test(home));
+const validSupportFixture = {
+  home: `<a href="${supportPath}">Destek</a>`,
+  support: `<link rel="canonical" href="${supportUrl}">`,
+  sitemap: `<loc>${supportUrl}</loc>`,
+  readme: `Support: ${supportUrl}\nSupport URL: ${supportUrl}`,
+  firebase: { hosting: { trailingSlash: false } },
+};
+check(
+  "support validator accepts the slashless fixture",
+  supportContractFailures(validSupportFixture).length === 0,
+);
+check(
+  "support validator rejects trailingSlash configuration drift",
+  supportContractFailures({
+    ...validSupportFixture,
+    firebase: { hosting: { trailingSlash: true } },
+  }).some((failure) => failure.startsWith("firebase:")),
+);
+check(
+  "support validator rejects a slashful canonical",
+  supportContractFailures({
+    ...validSupportFixture,
+    support: validSupportFixture.support.replace(supportUrl, slashfulSupportUrl),
+  }).some((failure) => failure.startsWith("support:")),
+);
+check(
+  "support validator rejects a slashful internal link",
+  supportContractFailures({
+    ...validSupportFixture,
+    home: validSupportFixture.home.replace(supportPath, slashfulSupportPath),
+  }).some((failure) => failure.startsWith("home:")),
+);
+check(
+  "support validator rejects a slashful sitemap location",
+  supportContractFailures({
+    ...validSupportFixture,
+    sitemap: validSupportFixture.sitemap.replace(supportUrl, slashfulSupportUrl),
+  }).some((failure) => failure.startsWith("sitemap:")),
+);
+check(
+  "support validator rejects the stale README support URL",
+  supportContractFailures({
+    ...validSupportFixture,
+    readme: validSupportFixture.readme.replace(supportUrl, staleSupportUrl),
+  }).some((failure) => failure.startsWith("readme:")),
+);
+const actualSupportFailures = supportContractFailures({
+  home,
+  support,
+  sitemap,
+  readme,
+  firebase,
+});
+check(
+  `real support URLs match trailingSlash false${
+    actualSupportFailures.length ? `: ${actualSupportFailures.join(", ")}` : ""
+  }`,
+  actualSupportFailures.length === 0,
+);
 const validIconHtml = requiredIcons
   .map(({ rel, href, type }) => `<link rel="${rel}" href="${href}" type="${type}">`)
   .join("\n");
@@ -160,8 +277,6 @@ check(
 check("support route has its own official marker", support.includes('data-lifeos-support="official"'));
 check("support route publishes a contact address", support.includes("merhaba@yulalab.com"));
 check("support document is not the 404 shell", support.length > 0 && normalized(support) !== normalized(notFound));
-check("sitemap includes the support route", sitemap.includes("https://lifeos.app/destek/"));
-
 const forbiddenClaims = [
   "uçtan uca şifrelidir",
   "yula lab okuyamaz",
