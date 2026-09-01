@@ -6,7 +6,8 @@
       ".firebaserc",
       "**/.*",
       "**/node_modules/**",
-      "**/README.md"
+      "**/README.md",
+      "verify-site.mjs"
     ],
     "cleanUrls": true,
     "trailingSlash": false,

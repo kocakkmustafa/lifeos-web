@@ -8,9 +8,11 @@
     <title>LifeOS — Yaşamını yeniden tasarla</title>
     <meta
       name="description"
-      content="Offline-first kişisel yaşam işletim sistemi. Sağlık, finans, eğitim ve hedeflerini tek yerde tut. Verin cihazında kalır, uçtan uca şifrelidir."
+      content="Offline-first kişisel yaşam işletim sistemi. Sağlık, finans, eğitim ve hedef kayıtları varsayılan olarak yerel çalışır."
     />
     <link rel="canonical" href="https://lifeos.app/" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" type="image/png" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -18,7 +20,7 @@
     <meta property="og:title" content="LifeOS — Yaşamını yeniden tasarla" />
     <meta
       property="og:description"
-      content="Offline-first kişisel yaşam işletim sistemi. Verin cihazında kalır."
+      content="Offline-first kişisel yaşam işletim sistemi. Bulut senkronu isteğe bağlıdır."
     />
     <meta property="og:locale" content="tr_TR" />
     <meta property="og:locale:alternate" content="en_US" />
@@ -30,10 +32,6 @@
       name="twitter:description"
       content="Offline-first kişisel yaşam işletim sistemi."
     />
-
-    <!-- Favicons -->
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <style>
       :root {
@@ -302,7 +300,7 @@
       }
     </style>
   </head>
-  <body>
+  <body data-lifeos-site="official">
     <header class="site">
       <div class="container">
         <div class="logo">
@@ -312,7 +310,7 @@
         <nav class="site-nav" aria-label="Site navigation">
           <a href="https://yulalab.com/projects/lifeos">Detay</a>
           <a href="https://yulalab.com/privacy/lifeos">Gizlilik</a>
-          <a href="https://yulalab.com/support">Destek</a>
+          <a href="/destek">Destek</a>
         </nav>
       </div>
     </header>
@@ -321,24 +319,30 @@
       <section class="hero">
         <div class="container">
           <span class="eyebrow">
-            <span class="dot"></span> LifeOS · iOS &amp; Android
+            <span class="dot"></span> LifeOS · iOS'ta yayında
           </span>
           <h1>Yaşamını yeniden tasarla.</h1>
           <p class="lead">
-            Sağlık, finans, eğitim ve hedeflerini tek yerde tut. Offline çalışır,
-            verin cihazında AES-256 ile şifrelenir, bulut senkronu uçtan uca
-            şifrelidir — YULA Lab okuyamaz, eğitim için kullanamaz.
+            Sağlık, finans, eğitim ve hedeflerini tek yerde tut. Temel kayıtların
+            varsayılan olarak yerel çalışır. Hesap oluşturmak ve bulut senkronu isteğe
+            bağlıdır; senkron yalnız desteklenen veri türlerini kapsar ve
+            kullanılabilirliği sürüme göre değişebilir.
           </p>
 
           <div class="stores">
-            <a class="store" href="https://yulalab.com/projects/lifeos" rel="noopener">
+            <a
+              class="store"
+              href="https://apps.apple.com/tr/app/lifeos-personal-life-os/id6771527233"
+              rel="noopener"
+              aria-label="LifeOS'u App Store'da görüntüle"
+            >
               <span>App Store</span>
-              <span class="badge-soon">Yakında</span>
+              <small>1.6.0</small>
             </a>
-            <a class="store" href="https://yulalab.com/projects/lifeos" rel="noopener">
+            <span class="store" aria-label="Google Play genel yayında değil">
               <span>Google Play</span>
-              <span class="badge-soon">Yakında</span>
-            </a>
+              <span class="badge-soon">Genel yayında değil</span>
+            </span>
             <a class="store" href="https://yulalab.com/projects/lifeos" rel="noopener">
               <span>Detaylar</span>
               <small>yulalab.com</small>
@@ -353,43 +357,46 @@
             <div class="feature">
               <h3>Offline-first</h3>
               <p>
-                İnternet olmadan tam çalışır. Veriniz cihazınızda SQLCipher + AES-256
-                ile şifreli tutulur.
+                Çekirdek kayıt akışları internet olmadan çalışır. Yerel kayıtlar
+                uygulamanın depolama katmanı ve platform güvenlik kontrolleriyle yönetilir.
               </p>
             </div>
             <div class="feature">
               <h3>Apple Health entegrasyonu</h3>
               <p>
                 Adım, kalp atışı, uyku ve egzersiz verilerini Apple Health veya
-                Health Connect üzerinden cihaz içinde okur.
+                Health Connect izin akışları üzerinden okur.
               </p>
             </div>
             <div class="feature">
               <h3>Sesli günlük ve Z-Rapor</h3>
               <p>
-                Konuşmanız cihazda metne dönüştürülür; isterseniz Gemini analizini
-                opt-in olarak açarsınız.
+                Konuşmanız işletim sisteminin konuşma tanıma servisiyle metne
+                dönüştürülür. Desteklenen cihazlarda yapılandırılmış yerel Gemma
+                modeli kullanılabilir.
               </p>
             </div>
             <div class="feature">
-              <h3>Şeffaf şifreleme</h3>
+              <h3>İsteğe bağlı, sınırlı senkron</h3>
               <p>
-                Bulut yedeği uçtan uca şifrelidir; anahtar yalnızca sizdedir. Sunucu
-                hiçbir veriyi açık metin görmez.
+                Bulut senkronu yalnız kullanıcı açarsa ve yalnız desteklenen veri
+                türleri için çalışır. Bütün yaşam verilerinin senkronlandığı iddia
+                edilmez; kapsam sürümle birlikte açıkça genişletilir.
               </p>
             </div>
             <div class="feature">
-              <h3>Reklamsız, izleme yok</h3>
+              <h3>Şeffaf veri beyanları</h3>
               <p>
-                Tek gelir modelimiz ödeme yapan kullanıcı. Veri toplayıp satmıyoruz;
-                analitik bile minimumda ve onay-gated.
+                Analiz, crash raporu ve mağaza veri güvenliği beyanları dış
+                read-back kanıtıyla ayrıca doğrulanır; bu yerel sayfa onların
+                yerine geçmez.
               </p>
             </div>
             <div class="feature">
-              <h3>Tek tıkla çıkış</h3>
+              <h3>Veri üzerinde kontrol</h3>
               <p>
-                İptal tek tık. Veri export tek tık. Hesap silme tek tık. KVKK ve GDPR
-                gerekenin ötesinde, self-servis.
+                Uygulama içinde veri dışa aktarma ve hesap silme akışları bulunur.
+                Abonelik yönetimi Apple veya Google mağaza hesabından yapılır.
               </p>
             </div>
           </div>
@@ -398,16 +405,17 @@
 
       <section class="privacy-strip" aria-labelledby="privacy-heading">
         <div class="container">
-          <h2 id="privacy-heading">Cihazınızda kalır. Sunucumuza gönderilmez.</h2>
+          <h2 id="privacy-heading">Önce cihaz. Bulut yalnız sen seçersen.</h2>
           <p>
-            LifeOS, AES-256 ile cihaz üstü şifreleme kullanan offline-first bir
-            uygulamadır. Sağlık, finans ve günlük verileriniz uçtan uca şifrelidir.
+            LifeOS offline-first çalışır ve yerel kayıtları varsayılan olarak yerel tutar.
+            Hesap ve bulut senkronu isteğe bağlıdır; yalnız desteklenen kayıtlar
+            senkron kapsamına girer. Güncel kapsamı gizlilik politikasında açıklarız.
           </p>
           <ul>
-            <li>AES-256 · SQLCipher</li>
+            <li>Offline-first yerel kayıt</li>
             <li>Offline-first</li>
-            <li>0 reklam</li>
-            <li>KVKK + GDPR uyumlu</li>
+            <li>İsteğe bağlı bulut senkronu</li>
+            <li>Açık gizlilik kontrolleri</li>
           </ul>
           <p style="margin-top: 20px">
             <a
@@ -428,13 +436,13 @@
             <span>LifeOS</span>
           </div>
           <div class="meta" style="margin-top: 14px">
-            YULA Lab · İstanbul · 2025
+            YULA Lab · İstanbul · 2026
           </div>
         </div>
         <ul aria-label="Footer links">
           <li><a href="https://yulalab.com/projects/lifeos">Detay</a></li>
           <li><a href="https://yulalab.com/privacy/lifeos">Gizlilik</a></li>
-          <li><a href="https://yulalab.com/support">Destek</a></li>
+          <li><a href="/destek">Destek</a></li>
           <li><a href="https://yulalab.com">yulalab.com</a></li>
           <li>
             <a href="mailto:merhaba@yulalab.com">merhaba@yulalab.com</a>

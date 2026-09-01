@@ -34,7 +34,7 @@ Detailed product info / privacy / support all live on yulalab.com:
 
 - Detail: https://yulalab.com/projects/lifeos
 - Privacy policy: https://yulalab.com/privacy/lifeos
-- Support: https://yulalab.com/support
+- Support: https://lifeos.app/destek
 
 Once App Store / Play Store apps are live, replace the "Yakında" store
 buttons in index.html with the real store URLs.
@@ -54,4 +54,4 @@ Firebase config (`firebase.json`) sets strict-grade security headers:
 When filling out the App Store Connect / Play Console listing, use:
 - Marketing URL: https://lifeos.app/
 - Privacy Policy URL: https://yulalab.com/privacy/lifeos
-- Support URL: https://yulalab.com/support
+- Support URL: https://lifeos.app/destek
