@@ -1,10 +1,12 @@
 {
   "hosting": {
+    "site": "lifeos-production-363a5",
     "public": ".",
     "ignore": [
       "firebase.json",
       ".firebaserc",
       "**/.*",
+      "**/.*/**",
       "**/node_modules/**",
       "**/README.md",
       "verify-site.mjs"
@@ -33,7 +35,25 @@
         ]
       },
       {
-        "source": "/(favicon|apple-touch-icon|robots|sitemap).*",
+        "source": "/favicon.ico",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=86400" }
+        ]
+      },
+      {
+        "source": "/apple-touch-icon.png",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=86400" }
+        ]
+      },
+      {
+        "source": "/robots.txt",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=86400" }
+        ]
+      },
+      {
+        "source": "/sitemap.xml",
         "headers": [
           { "key": "Cache-Control", "value": "public, max-age=86400" }
         ]
