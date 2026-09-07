@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { createRequire } from "node:module";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
 const results = [];
@@ -88,6 +91,52 @@ function supportContractFailures({ home, support, sitemap, readme, firebase }) {
     failures.push("readme: both support URLs must use the exact LifeOS URL");
   }
 
+  return failures;
+}
+
+const staticCachePaths = [
+  "/favicon.ico",
+  "/apple-touch-icon.png",
+  "/robots.txt",
+  "/sitemap.xml",
+];
+const staticCacheValue = "public, max-age=86400";
+
+function staticCacheContractFailures(firebaseConfig) {
+  const failures = [];
+  const rules = firebaseConfig.hosting?.headers;
+  if (!Array.isArray(rules)) return ["firebase: hosting.headers must be an array"];
+
+  const unexpectedCacheRules = rules.filter(
+    (rule) =>
+      !staticCachePaths.includes(rule?.source) &&
+      rule?.headers?.some(
+        (header) => header?.key?.toLowerCase() === "cache-control",
+      ),
+  );
+  if (unexpectedCacheRules.length > 0) {
+    failures.push(
+      "firebase: Cache-Control must be owned only by the four literal static paths",
+    );
+  }
+
+  for (const path of staticCachePaths) {
+    const matches = rules.filter((rule) => rule?.source === path);
+    if (matches.length !== 1) {
+      failures.push(`${path}: expected exactly one literal cache rule`);
+      continue;
+    }
+    const cacheHeaders = matches[0].headers?.filter(
+      (header) => header?.key?.toLowerCase() === "cache-control",
+    );
+    if (
+      !Array.isArray(cacheHeaders) ||
+      cacheHeaders.length !== 1 ||
+      cacheHeaders[0].value !== staticCacheValue
+    ) {
+      failures.push(`${path}: wrong Cache-Control contract`);
+    }
+  }
   return failures;
 }
 
@@ -216,6 +265,58 @@ check(
   }`,
   actualSupportFailures.length === 0,
 );
+const validStaticCacheFixture = {
+  hosting: {
+    headers: staticCachePaths.map((source) => ({
+      source,
+      headers: [{ key: "Cache-Control", value: staticCacheValue }],
+    })),
+  },
+};
+check(
+  "static cache validator accepts four literal Firebase paths",
+  staticCacheContractFailures(validStaticCacheFixture).length === 0,
+);
+const regexShapedCacheFailures = staticCacheContractFailures({
+  hosting: {
+    headers: [
+      {
+        source: "/(favicon|apple-touch-icon|robots|sitemap).*",
+        headers: [{ key: "Cache-Control", value: staticCacheValue }],
+      },
+    ],
+  },
+});
+check(
+  "static cache validator rejects regex-shaped Firebase globs",
+  regexShapedCacheFailures.some((failure) => failure.includes("owned only")) &&
+    staticCachePaths.every((path) =>
+      regexShapedCacheFailures.some((failure) => failure.startsWith(`${path}:`)),
+    ),
+);
+check(
+  "static cache validator rejects a second broad Cache-Control owner",
+  staticCacheContractFailures({
+    hosting: {
+      headers: [
+        ...validStaticCacheFixture.hosting.headers,
+        {
+          source: "**",
+          headers: [{ key: "Cache-Control", value: "public, max-age=300" }],
+        },
+      ],
+    },
+  }).some((failure) => failure.includes("owned only")),
+);
+const actualStaticCacheFailures = staticCacheContractFailures(firebase);
+check(
+  `Firebase applies the static cache contract to every exact path${
+    actualStaticCacheFailures.length
+      ? `: ${actualStaticCacheFailures.join(", ")}`
+      : ""
+  }`,
+  actualStaticCacheFailures.length === 0,
+);
 const validIconHtml = requiredIcons
   .map(({ rel, href, type }) => `<link rel="${rel}" href="${href}" type="${type}">`)
   .join("\n");
@@ -309,6 +410,22 @@ check(
   Array.isArray(firebase.hosting?.ignore) &&
     firebase.hosting.ignore.includes("verify-site.mjs"),
 );
+
+const firebaseToolsRoot = process.env.FIREBASE_TOOLS_ROOT;
+assert.ok(firebaseToolsRoot, "Set FIREBASE_TOOLS_ROOT to the pinned firebase-tools 15.29.0 package before verification");
+const require = createRequire(import.meta.url);
+const cliPackage = require(resolve(firebaseToolsRoot, "package.json"));
+assert.equal(cliPackage.version, "15.29.0", "Review the hosting manifest when upgrading Firebase CLI");
+const { listFiles } = require(resolve(firebaseToolsRoot, "lib/listFiles.js"));
+const actualDeployFiles = listFiles(fileURLToPath(new URL(".", import.meta.url)), firebase.hosting.ignore).sort();
+const expectedDeployFiles = [
+  "404.html", "apple-touch-icon.png", "destek/index.html",
+  "favicon.ico", "index.html", "robots.txt", "sitemap.xml",
+];
+check("Firebase deploy manifest contains exactly the seven public assets",
+  JSON.stringify(actualDeployFiles) === JSON.stringify(expectedDeployFiles));
+check("Firebase deploy manifest excludes all hidden path segments",
+  !actualDeployFiles.some((path) => path.split("/").some((part) => part.startsWith("."))));
 
 for (const result of results) {
   console.log(`${result.ok ? "✅" : "❌"} ${result.label}`);
